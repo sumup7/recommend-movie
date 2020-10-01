@@ -7,6 +7,17 @@ var helmet = require('helmet');
 var session = require('express-session');
 var passport = require('passport');
 
+// モデルの読み込み
+var User = require('./models/user');
+var Movie = require('./models/movie');
+var MovieViewingExperience = require('./models/movieviewingexperience');
+User.sync().then(() => {
+  Movie.belongsTo(User, {foreignKey: 'createdBy'});
+  Movie.sync().then(() => {
+    MovieViewingExperience.belongsTo(Movie, {foreignKey: 'movieId'});
+    MovieViewingExperience.sync();
+  });
+});
 var GitHubStrategy = require('passport-github2').Strategy;
 var GITHUB_CLIENT_ID = 'fd1542eb62599b62e0d7';
 var GITHUB_CLIENT_SECRET = '686e400b2c50fba56718b561bddd38efb04f7fb4';
@@ -27,7 +38,12 @@ passport.use(new GitHubStrategy({
 },
   function (accessToken, refreshToken, profile, done) {
     process.nextTick(function () {
-      return done(null, profile);
+      User.upsert({
+        userId: profile.id,
+        username: profile.username
+      }).then(() => {
+        done(null, profile);
+      });
     });
   }
 ));
@@ -35,6 +51,7 @@ passport.use(new GitHubStrategy({
 var indexRouter = require('./routes/index');
 var loginRouter = require('./routes/login');
 var logoutRouter = require('./routes/logout');
+var moviesRouter = require('./routes/movies');
 
 var app = express();
 app.use(helmet());
@@ -56,6 +73,7 @@ app.use(passport.session());
 app.use('/', indexRouter);
 app.use('/login', loginRouter);
 app.use('/logout', logoutRouter);
+app.use('/movies', moviesRouter)
 
 app.get('/auth/github',
   passport.authenticate('github', { scope: ['user:email']}),

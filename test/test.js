@@ -2,6 +2,8 @@
 const request = require('supertest');
 const app = require('../app');
 const passportStub = require('passport-stub');
+const User = require('../models/user');
+const Movie = require('../models/movie');
 
 describe('/login', () => {
   beforeAll(() => {
@@ -38,3 +40,59 @@ describe('logout', () => {
       .expect(302);
   });
 });
+
+
+describe('/movies', () => {
+  beforeAll(() => {
+    passportStub.install(app);
+    passportStub.login({ id: 0, username: 'testuser' });
+  });
+
+  afterAll(() => {
+    passportStub.logout();
+    passportStub.uninstall(app);
+  });
+
+  test('映画の感想が作成でき、表示される', done => {
+    User.upsert({ userId: 0, username: 'testuser' }).then(() => {
+      request(app)
+        .post('/movies')
+        .send({
+          movieTitle: 'テスト予定1',
+          movieDetails: 'テストメモ1\r\nテストメモ2',
+          movieReview: 'テストメモ3\r\nテストメモ4',
+          movieReviewAll: 'テストメモ5\r\nテストメモ6'
+        })
+        .expect('Location', /movies/)
+        .expect(302)
+        .end((err, res) => {
+          const createdMoviePath = res.headers.location;
+          console.log(createdMoviePath);
+          request(app)
+            .get(createdMoviePath)
+            .expect(/テスト予定1/)
+            .expect(/テストメモ1/)
+            .expect(/テストメモ2/)
+            .expect(/テストメモ3/)
+            .expect(/テストメモ4/)
+            .expect(/テストメモ5/)
+            .expect(/テストメモ6/)
+            .expect(200)
+            .end((err, res) => {
+              if (err) return done(err);
+              // テストで作成したデータを削除
+              const movieId = createdMoviePath.split('/movies/')[1];
+              Promise.all().then(() => {
+                Movie.findByPk(movieId).then(s => {
+                  s.destroy().then(() => {
+                    if (err) return done(err);
+                    done();
+                      });    
+                    });
+                  });
+                });
+              });
+            });
+        });
+    });
+

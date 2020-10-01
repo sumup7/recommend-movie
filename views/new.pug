@@ -1,0 +1,17 @@
+extends layout
+
+block content
+  form(method="post", action="/movies")
+    div
+      h5 映画のタイトル
+      input(type="text" name="movieTitle")
+    div
+      h5 映画の関連情報
+      textarea(name="movieDetails")
+    div
+      h5 ネタバレなし感想 (ネタバレ禁止です)
+      textarea(name="movieReview")
+    div
+      h5 ネタバレあり感想 (ネタバレありです)
+      textarea(name="movieReviewAll")
+    button(type="submit") 映画の感想を投稿する
