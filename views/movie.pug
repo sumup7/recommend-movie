@@ -6,7 +6,7 @@ block content
     div 映画の関連情報（監督、出演者）
       p(style="white-space:pre;") #{movie.movieDetails}
     div 映画の感想（ネタバレ禁止）
-    div 映画の感想（ネタバレあり）
+    #movieReviewAll 映画の感想（ネタバレあり）
       p(style="white-space:pre;") #{movie.movieReviewAll}
     p 作成者: #{user.username}
     table

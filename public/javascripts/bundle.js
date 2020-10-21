@@ -94,9 +94,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);
 
 
+ // const movieviewingexperience = parseInt(('.movieviewingexperiences-toggle-button').data('movieviewingexperience'));
 
 jquery__WEBPACK_IMPORTED_MODULE_0___default()('.movieviewingexperiences-toggle-button').each(function (i, e) {
-  var button = jquery__WEBPACK_IMPORTED_MODULE_0___default()(e);
+  var button = jquery__WEBPACK_IMPORTED_MODULE_0___default()(e); // const movieReviewAllDivided = document.getElementById('movie.movieReviewAll');
+
+  var m = parseInt(button.data('movieviewingexperience'));
+  console.log(m);
+
+  if (m === 0 || m === 1) {
+    document.getElementById('movieReviewAll').style.display = 'none';
+  } else {}
+
   button.click(function () {
     var movieId = button.data('movie-id');
     var userId = button.data('user-id');
