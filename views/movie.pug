@@ -6,10 +6,23 @@ block content
     div 映画の関連情報（監督、出演者）
       p(style="white-space:pre;") #{movie.movieDetails}
     div 映画の感想（ネタバレ禁止）
-      p(style="white-space:pre;") #{movie.movieReview}
     div 映画の感想（ネタバレあり）
       p(style="white-space:pre;") #{movie.movieReviewAll}
     p 作成者: #{user.username}
-        p 映画の視聴経験
-        each user in users
-            button 観てない
+    table
+    tr
+      th 映画視聴経験
+      each user in users
+        th #{user.username}
+    tr
+      each user in users
+        - var movieviewingexperience = movieviewingexperienceMapMap.get(user.userId);
+        - var movieviewingexperienceLabels = ['観てない', '興味がある', '観た'];
+        td
+          if user.isSelf
+            button(
+              data-movie-id=movie.movieId
+              data-user-id=user.userId
+              data-movieviewingexperience=movieviewingexperience).movieviewingexperiences-toggle-button #{movieviewingexperienceLabels[movieviewingexperience]}
+          else
+            p #{movieviewingexperienceLabels[movieviewingexperience]}

@@ -3,15 +3,15 @@ extends layout
 block content
   form(method="post", action="/movies")
     div
-      h5 映画のタイトル
-      input(type="text" name="movieTitle")
+      h5 映画のタイトル(255文字まで)
+      input(type="text" name="movieTitle" maxlength="255")
     div
       h5 映画の関連情報
-      textarea(name="movieDetails")
+      textarea(name="movieDetails" maxlength="255")
     div
       h5 ネタバレなし感想 (ネタバレ禁止です)
-      textarea(name="movieReview")
+      textarea(name="movieReview" maxlength="1000")
     div
       h5 ネタバレあり感想 (ネタバレありです)
-      textarea(name="movieReviewAll")
+      textarea(name="movieReviewAll" maxlength="1000")
     button(type="submit") 映画の感想を投稿する

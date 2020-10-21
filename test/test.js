@@ -82,7 +82,6 @@ describe('/movies', () => {
               if (err) return done(err);
               // テストで作成したデータを削除
               const movieId = createdMoviePath.split('/movies/')[1];
-              Promise.all().then(() => {
                 Movie.findByPk(movieId).then(s => {
                   s.destroy().then(() => {
                     if (err) return done(err);
@@ -94,5 +93,5 @@ describe('/movies', () => {
               });
             });
         });
-    });
+
 

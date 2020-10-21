@@ -13,6 +13,7 @@ var Movie = require('./models/movie');
 var MovieViewingExperience = require('./models/movieviewingexperience');
 User.sync().then(() => {
   Movie.belongsTo(User, {foreignKey: 'createdBy'});
+  MovieViewingExperience.belongsTo(User, {foreignKey: 'userId'});
   Movie.sync().then(() => {
     MovieViewingExperience.belongsTo(Movie, {foreignKey: 'movieId'});
     MovieViewingExperience.sync();
@@ -52,6 +53,7 @@ var indexRouter = require('./routes/index');
 var loginRouter = require('./routes/login');
 var logoutRouter = require('./routes/logout');
 var moviesRouter = require('./routes/movies');
+var movieviewingexperiencesRouter = require('./routes/movieviewingexperiences');
 
 var app = express();
 app.use(helmet());
@@ -73,7 +75,8 @@ app.use(passport.session());
 app.use('/', indexRouter);
 app.use('/login', loginRouter);
 app.use('/logout', logoutRouter);
-app.use('/movies', moviesRouter)
+app.use('/movies', moviesRouter);
+app.use('/movies', movieviewingexperiencesRouter);
 
 app.get('/auth/github',
   passport.authenticate('github', { scope: ['user:email']}),
