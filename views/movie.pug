@@ -6,8 +6,13 @@ block content
     div 映画の関連情報（監督、出演者）
       p(style="white-space:pre;") #{movie.movieDetails}
     div 映画の感想（ネタバレ禁止）
-    #movieReviewAll 映画の感想（ネタバレあり）
-      p(style="white-space:pre;") #{movie.movieReviewAll}
+    each user in users
+        - var movieviewingexperience = movieviewingexperienceMapMap.get(user.userId);
+        - var movieReviewAll3 = movie.movieReviewAll
+        - var movieReviewAll2 = '興味があるならご覧下さい'
+        - var movieReviewAll1 = '視聴してからご覧下さい'
+        - var movieReviewLabels = [movieReviewAll1, movieReviewAll2 ,movieReviewAll3 ];
+          p#movieReview(style="white-space:pre;" data-movieviewingexperience=movieviewingexperience) #{movieReviewLabels[movieviewingexperience]}
     p 作成者: #{user.username}
     table
     tr
@@ -23,6 +28,7 @@ block content
             button(
               data-movie-id=movie.movieId
               data-user-id=user.userId
+              data-movieReviewAll=movie.movieReviewAll
               data-movieviewingexperience=movieviewingexperience).movieviewingexperiences-toggle-button #{movieviewingexperienceLabels[movieviewingexperience]}
           else
             p #{movieviewingexperienceLabels[movieviewingexperience]}
