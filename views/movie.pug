@@ -8,7 +8,7 @@ block content
     div 映画の感想（ネタバレ禁止）
     p#movieReview(style="white-space:pre;") #{movie.movieReviewAll}
     p 作成者: #{user.username}
-    - var isMine = parseInt(user.id) === movie.user.userId
+    - var isMine = parseInt(user.id) === movie.userId
     if isMine
       div
         a(href=`/movies/${movie.movieId}/edit`) この映画の感想を編集する

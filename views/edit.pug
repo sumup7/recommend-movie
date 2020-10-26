@@ -5,14 +5,14 @@ block content
   form(method="post", action=`/movies/${movie.movieId}?edit=1`)
     div
       h5 映画のタイトル(255文字まで)
-      input(type="text" name="movieTitle" maxlength="255")
+      input(type="text" name="movieTitle" value=movie.movieTitle maxlength="255")
     div
       h5 映画の関連情報
-      textarea(name="movieDetails" maxlength="255")
+      textarea(name="movieDetails" maxlength="255") #{movie.movieDetails}
     div
       h5 ネタバレなし感想 (ネタバレ禁止です)
-      textarea(name="movieReview" maxlength="1000")
+      textarea(name="movieReview" maxlength="1000") #{movie.movieReview}
     div
       h5 ネタバレあり感想 (ネタバレありです)
-      textarea(name="movieReviewAll" maxlength="1000")
+      textarea(name="movieReviewAll" maxlength="1000") #{movie.movieReviewAll}
     button(type="submit") 映画の感想を編集する
