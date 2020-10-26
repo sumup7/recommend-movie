@@ -13,11 +13,9 @@ var Movie = require('./models/movie');
 var MovieViewingExperience = require('./models/movieviewingexperience');
 User.sync().then(() => {
   Movie.belongsTo(User, {foreignKey: 'createdBy'});
+  Movie.sync();
   MovieViewingExperience.belongsTo(User, {foreignKey: 'userId'});
-  Movie.sync().then(() => {
-    MovieViewingExperience.belongsTo(Movie, {foreignKey: 'movieId'});
-    MovieViewingExperience.sync();
-  });
+  MovieViewingExperience.sync();
 });
 var GitHubStrategy = require('passport-github2').Strategy;
 var GITHUB_CLIENT_ID = 'fd1542eb62599b62e0d7';

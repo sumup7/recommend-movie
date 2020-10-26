@@ -94,27 +94,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);
 
 
- // const movieviewingexperience = parseInt(('.movieviewingexperiences-toggle-button').data('movieviewingexperience'));
 
 jquery__WEBPACK_IMPORTED_MODULE_0___default()('.movieviewingexperiences-toggle-button').each(function (i, e) {
-  var button = jquery__WEBPACK_IMPORTED_MODULE_0___default()(e); // const movieReviewAllDivided = document.getElementById('movie.movieReviewAll');
-  // let m = parseInt(button.data('movieviewingexperience'));
-  // let m = movieviewingexperienceMapMap.get(user.userId);
-  //   console.log(m);
-  //   if(m === 0 || m === 1) {
-  //     document.getElementById('movieReviewAll').style.display = 'none';
-  // } else if (m === 2)  {
-  //     document.getElementById('movieReviewAll').style.display = 'block';
-  // }
-
+  var button = jquery__WEBPACK_IMPORTED_MODULE_0___default()(e);
   button.click(function () {
     var movieId = button.data('movie-id');
     var userId = button.data('user-id');
-    var movieviewingexperience = parseInt(button.data('movieviewingexperience')); // const movieReviewAllDivided = document.getElementById('movieReview');
-    // const movieReviewAll1 = '視聴してからご覧下さい';
-    // const movieReviewAll2 = '興味があるならご覧下さい';
-    // const movieReviewAll3 = button.data('movieReviewAll');
-
+    var movieviewingexperience = parseInt(button.data('movieviewingexperience'));
     var nextMovieviewingexperience = (movieviewingexperience + 1) % 3;
 
     if (nextMovieviewingexperience === 0 || nextMovieviewingexperience === 1) {
@@ -126,11 +112,9 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()('.movieviewingexperiences-toggle-b
     jquery__WEBPACK_IMPORTED_MODULE_0___default.a.post("/movies/".concat(movieId, "/users/").concat(userId, "/movieviewingexperience/:movieviewingexperience"), {
       movieviewingexperience: nextMovieviewingexperience
     }, function (data) {
-      button.data('movieviewingexperience', data.movieviewingexperience); // movieReviewAllDivided.data('movieviewingexperience', data.movieviewingexperience);
-      // const movieReviewLabels = [movieReviewAll1,movieReviewAll2 ,movieReviewAll3];
-
+      button.data('movieviewingexperience', data.movieviewingexperience);
       var movieviewingexperienceLabels = ['観てない', '興味がある', '観た'];
-      button.text(movieviewingexperienceLabels[data.movieviewingexperience]); // movieReviewAllDivided.text(movieReviewLabels[data.movieviewingexperience]);
+      button.text(movieviewingexperienceLabels[data.movieviewingexperience]);
     });
   });
 });

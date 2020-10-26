@@ -6,14 +6,12 @@ block content
     div 映画の関連情報（監督、出演者）
       p(style="white-space:pre;") #{movie.movieDetails}
     div 映画の感想（ネタバレ禁止）
-    //- each user in users
-    //-     - var movieviewingexperience = movieviewingexperienceMapMap.get(user.userId);
-    //-     - var movieReviewAll3 = movie.movieReviewAll
-    //-     - var movieReviewAll2 = '興味があるならご覧下さい'
-    //-     - var movieReviewAll1 = '視聴してからご覧下さい'
-    //-     - var movieReviewLabels = [movieReviewAll1, movieReviewAll2 ,movieReviewAll3 ];
     p#movieReview(style="white-space:pre;") #{movie.movieReviewAll}
     p 作成者: #{user.username}
+    - var isMine = parseInt(user.id) === movie.user.userId
+    if isMine
+      div
+        a(href=`/movies/${movie.movieId}/edit`) この映画の感想を編集する
     table
     tr
       th 映画視聴経験

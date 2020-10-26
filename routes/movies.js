@@ -24,23 +24,26 @@ router.post('/', authenticationEnsurer, (req, res, next) => {
     createdBy: req.user.id,
     updatedAt: updatedAt
   }).then((movie) => {
-    res.redirect('/movies/' + movie.movieId);
+    // Movie.bulkCreate(movie).then(() => {
+      res.redirect('/movies/' + movie.movieId);
+    // });
   });
 });
 
 router.get('/:movieId', authenticationEnsurer, (req, res, next) => {
   Movie.findOne({
     include: [
-    {
-    model: User,
-    attributes: ['userId', 'username']
-  }],
+      {
+        model: User,
+        attributes: ['userId', 'username']
+      }],
   where: {
     movieId: req.params.movieId
   },
   order: [['updatedAt', 'DESC']]
 }).then((movie) => {
   // データベースからその映画の全ての視聴経験を取得する
+  console.log(movie);
   if(movie) {
     MovieViewingExperience.findAll({
     include: [
@@ -50,8 +53,9 @@ router.get('/:movieId', authenticationEnsurer, (req, res, next) => {
       }
     ],
     where: { movieId: movie.movieId},
-    order: [[User, 'username', 'ASC']]
-    // ,['movieviewingexperience', 'ASC']]
+    order: 
+    [[User, 'username', 'ASC'],
+    ['movieviewingexperience', 'ASC']]
   }).then((movieviewingexperiences) => {
     //視聴経験MapMap(キー：ユーザーid　値：map)(キー：movieId 値：movieviewingexperience)
     const movieviewingexperienceMapMap = new Map();
@@ -89,7 +93,6 @@ router.get('/:movieId', authenticationEnsurer, (req, res, next) => {
       movieviewingexperienceMapMap.set(u.userId, a);
       //   });
 });
-
    res.render('movie', {
      user: req.user,
      movie: movie,
@@ -106,5 +109,63 @@ router.get('/:movieId', authenticationEnsurer, (req, res, next) => {
 }
 });
 }); 
+
+router.get('/:movieId/edit', authenticationEnsurer, (req, res, next) => {
+  Movie.findOne({
+    where: {
+      movieId: req.params.movieId
+    }
+  }).then((movie) => {
+    if (isMine(req, movie)) { // 作成者のみが編集フォームを開ける
+      // MovieViewingExperience.findAll({
+      //   where: { movieId: movie.movieId },
+      //   order: [['movieviewingexperience', 'ASC']]
+      // }).then((movieviewingexperiences) => {
+        res.render('edit', {
+          user: req.user,
+          movie: movie,
+          // movieviewingexperiences: movieviewingexperiences
+        });
+      // });
+    } else {
+      const err = new Error('指定された予定がない、または、予定する権限がありません');
+      err.status = 404;
+      next(err);
+    }
+  });
+});
+
+function isMine(req, movie) {
+  return movie && parseInt(movie.createdBy) === parseInt(req.user.id);
+}
+
+router.post('/;movieId', authenticationEnsurer, (req, res, next) => {
+  Movie.findOne({
+    where: {
+      movieId: req.params.movieId
+    }
+  }).then((movie) => {
+    if (movie && isMine(req, movie)) {
+      if (parseInt(req.query.edit) === 1) {
+      const updatedAt = new Date();
+      movie.update({
+        movieId: movie.movieId,
+        movieTitle: req.body.movieTitle.slice(0, 255) || '（名称未設定）',
+        movieDetails: req.body.movieDetails.slice(0, 255) || '（名称未設定）',
+        movieReview: req.body.movieReview.slice(0, 1000),
+        movieReviewAll: req.body.movieReviewAll.slice(0, 1000),
+        createdBy: req.user.id,
+        updatedAt: updatedAt
+      }).then((movie) => {
+        res.redirect('/movies/' + movie.movieId);
+      });
+      } else {
+        const err = new Error('不正なリクエストです');
+        err.status = 400;
+        next(err);
+    }}
+  });
+});
+
 
 module.exports = router;
