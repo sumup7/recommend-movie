@@ -141,7 +141,7 @@ function isMine(req, movie) {
   return movie && parseInt(movie.createdBy) === parseInt(req.user.id);
 }
 
-router.post('/;movieId', authenticationEnsurer, (req, res, next) => {
+router.post('/:movieId', authenticationEnsurer, (req, res, next) => {
   Movie.findOne({
     where: {
       movieId: req.params.movieId
@@ -163,6 +163,10 @@ router.post('/;movieId', authenticationEnsurer, (req, res, next) => {
       }).then((movie) => {
         res.redirect('/movies/' + movie.movieId);
       });
+    } else if (parseInt(req.query.delete) === 1) {
+      deleteMovieAggregate(req.params.movieId, () => {
+        res.redirect('/');
+      });
       } else {
         const err = new Error('不正なリクエストです');
         err.status = 400;
@@ -171,5 +175,20 @@ router.post('/;movieId', authenticationEnsurer, (req, res, next) => {
   });
 });
 
+function deleteMovieAggregate(movieId, done, err) {
+  MovieViewingExperience.findAll({
+    where: { movieId: movieId }
+  }).then((movieviewingexperiences) => {
+    const promises = movieviewingexperiences.map((m) => { return m.destroy(); });
+    return Promise.all(promises);
+  }).then(() => {
+    return Movie.findByPk(movieId).then((m) => { return m.destroy(); });
+  }).then(() => {
+    if (err) return done(err);
+    done();
+  });
+}
+
+router.deleteMovieAggregate = deleteMovieAggregate;
 
 module.exports = router;

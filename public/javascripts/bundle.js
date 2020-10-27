@@ -104,9 +104,9 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()('.movieviewingexperiences-toggle-b
     var nextMovieviewingexperience = (movieviewingexperience + 1) % 3;
 
     if (nextMovieviewingexperience === 0 || nextMovieviewingexperience === 1) {
-      document.getElementById('movieReview').style.display = 'none';
+      document.getElementById('movieReviewAll').style.display = 'none';
     } else if (nextMovieviewingexperience === 2) {
-      document.getElementById('movieReview').style.display = 'block';
+      document.getElementById('movieReviewAll').style.display = 'block';
     }
 
     jquery__WEBPACK_IMPORTED_MODULE_0___default.a.post("/movies/".concat(movieId, "/users/").concat(userId, "/movieviewingexperience/:movieviewingexperience"), {

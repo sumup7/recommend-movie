@@ -6,7 +6,9 @@ block content
     div 映画の関連情報（監督、出演者）
       p(style="white-space:pre;") #{movie.movieDetails}
     div 映画の感想（ネタバレ禁止）
-    p#movieReview(style="white-space:pre;") #{movie.movieReviewAll}
+    p#movieReview(style="white-space:pre;") #{movie.movieReview}
+    div 映画の感想（ネタバレあり）
+    p#movieReviewAll(style="white-space:pre;") #{movie.movieReviewAll}
     p 作成者: #{user.username}
     - var isMine = parseInt(user.id) === movie.userId
     if isMine
