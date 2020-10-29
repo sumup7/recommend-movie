@@ -1,26 +1,21 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
-  div
-    if user
-      div
-        a(href="/logout") #{user.username} をログアウト
-      div
-        a(href="/movies/new") おすすめの映画を作る
-      - var hasMovie = movies.length > 0
-      if hasMovie
-        h3 あなたの作った映画の一覧
-        table.table
-          tr
-            th 映画のタイトル
-            th 更新日時
-          each movie in movies
+  div.jumbotron.my-3
+    h1.display-4 おすすめ映画アプリ
+    p.lead おすすめ映画アプリは、GitHubで認証でき、映画の感想を投稿して、共有できるサービスです
+  if user
+    div
+      a(href="/movies/new").btn.btn-info 感想を投稿する
+    - var hasMovie = movies.length > 0
+    if hasMovie
+      h3.my-3 みんなの投稿した映画の感想一覧
+      table.table
+        tr
+          th 映画のタイトル
+          th 更新日時
+        each movie in movies
             tr
-              td
-                a(href=`/movies/${movie.movieId}`) #{movie.movieTitle}
-              td #{movie.updatedAt}
-    else
-      div
-        a(href="/login") ログイン
+            td
+              a(href=`/movies/${movie.movieId}`) #{movie.movieTitle}
+            td #{movie.updatedAt}

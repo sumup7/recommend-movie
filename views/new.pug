@@ -1,17 +1,17 @@
 extends layout
 
 block content
-  form(method="post", action="/movies")
-    div
-      h5 映画のタイトル(255文字まで)
-      input(type="text" name="movieTitle" maxlength="255")
-    div
-      h5 映画の関連情報
-      textarea(name="movieDetails" maxlength="255")
-    div
-      h5 ネタバレなし感想 (ネタバレ禁止です)
-      textarea(name="movieReview" maxlength="1000")
-    div
-      h5 ネタバレあり感想 (ネタバレありです)
-      textarea(name="movieReviewAll" maxlength="1000")
-    button(type="submit") 映画の感想を投稿する
+  form(method="post", action="/movies").my-3
+    div.form-group
+      label(for="movieTitle") 映画のタイトル(255文字まで)
+      input(type="text" name="movieTitle" maxlength="255")#movieTitle.form-control
+    div.form-group
+      label(for="movieDetails") 映画の関連情報
+      textarea(name="movieDetails" maxlength="255")#movieDetails.form-control
+    div.form-group
+      label(for="movieReview") ネタバレなし感想 (ネタバレ禁止です)
+      textarea(name="movieReview" maxlength="1000")#movieReview.form-control
+    div.form-group
+      label(for="movieReviewAll") ネタバレあり感想 (ネタバレありです)
+      textarea(name="movieReviewAll" maxlength="1000")#movieReviewAll.form-control
+    button(type="submit").btn.btn-info 映画の感想を投稿する

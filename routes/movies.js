@@ -21,8 +21,8 @@ router.post('/', authenticationEnsurer, (req, res, next) => {
     movieDetails: req.body.movieDetails.slice(0, 255) || '（名称未設定）',
     movieReview: req.body.movieReview.slice(0, 1000),
     movieReviewAll: req.body.movieReviewAll.slice(0, 1000),
-    userId: req.user.id,
-    username: req.user.username,
+    // userId: req.user.id,
+    // username: req.user.username,
     createdBy: req.user.id,
     updatedAt: updatedAt
   }).then((movie) => {
@@ -34,11 +34,11 @@ router.post('/', authenticationEnsurer, (req, res, next) => {
 
 router.get('/:movieId', authenticationEnsurer, (req, res, next) => {
   Movie.findOne({
-    // include: [
-    //   {
-    //     model: User,
-    //     attributes: ['userId', 'username']
-    //   }],
+    include: [
+      {
+        model: User,
+        attributes: ['userId', 'username']
+      }],
   where: {
     movieId: req.params.movieId
   },

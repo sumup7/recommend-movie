@@ -1,8 +1,17 @@
 'use strict';
 import $ from 'jquery';
+const global = Function('return this;')();
+global.jQuery = $;
+import bootstrap from 'bootstrap';
 
 $('.movieviewingexperiences-toggle-button').each((i, e) => {
   const button = $(e);
+  const m = parseInt(button.data('movieviewingexperience'));
+  if(m === 0 || m === 1) {
+    document.getElementById('movieReviewAll').style.display = 'none';
+  } else if (m === 2) {
+    document.getElementById('movieReviewAll').style.display = 'block';
+  }
   button.click(() => {
     const movieId = button.data('movie-id');
     const userId = button.data('user-id');
@@ -21,6 +30,10 @@ $('.movieviewingexperiences-toggle-button').each((i, e) => {
         button.data('movieviewingexperience', data.movieviewingexperience);
         const movieviewingexperienceLabels = ['観てない', '興味がある', '観た'];
         button.text(movieviewingexperienceLabels[data.movieviewingexperience]);
+        
+        const buttonStyles = ['btn-danger', 'btn-secondary', 'btn-success'];
+        button.removeClass('btn-danger btn-secondary btn-success');
+        button.addClass(buttonStyles[data.movieviewingexperience]);
       }
     );
   });

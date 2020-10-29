@@ -26,14 +26,14 @@ const Movie = loader.database.define(
       type: Sequelize.TEXT,
       allowNull: false
     },
-    userId: {
-      type: Sequelize.INTEGER,
-      allowNull: false
-    },
-    username: {
-      type: Sequelize.STRING,
-      allowNull: false
-    },
+    // userId: {
+    //   type: Sequelize.INTEGER,
+    //   allowNull: false
+    // },
+    // username: {
+    //   type: Sequelize.STRING,
+    //   allowNull: false
+    // },
     createdBy: {
       type: Sequelize.INTEGER,
       allowNull: false

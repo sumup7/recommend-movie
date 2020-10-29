@@ -12,7 +12,7 @@ var User = require('./models/user');
 var Movie = require('./models/movie');
 var MovieViewingExperience = require('./models/movieviewingexperience');
 User.sync().then(() => {
-  Movie.belongsTo(User, {foreignKey: 'createdBy'});
+  Movie.belongsTo(User, { foreignKey: 'createdBy' });
   Movie.sync();
   MovieViewingExperience.belongsTo(User, {foreignKey: 'userId'});
   MovieViewingExperience.sync();
