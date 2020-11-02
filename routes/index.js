@@ -1,6 +1,7 @@
 var express = require('express');
 var Movie = require('../models/movie');
 var router = express.Router();
+const moment = require('moment-timezone');
 
 /* GET home page. */
 router.get('/', (req, res, next) => {
@@ -12,6 +13,9 @@ router.get('/', (req, res, next) => {
       },
       order: [['updatedAt' ,'DESC']]
     }).then(movies => {
+      movies.forEach((movie) => {
+        movie.formattedUpdatedAt = moment(movie.updatedAt).tz('Asia/Tokyo').format('YYYY/MM/DD HH:mm');
+      });
       res.render('index', {
         title: title,
         user: req.user,

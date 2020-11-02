@@ -7,6 +7,7 @@ import bootstrap from 'bootstrap';
 $('.movieviewingexperiences-toggle-button').each((i, e) => {
   const button = $(e);
   const m = parseInt(button.data('movieviewingexperience'));
+  //  ブラウザを読み込んだときにに観てない、興味があるのときはネタバレ感想を表示しない。観たなら表示する。
   if(m === 0 || m === 1) {
     document.getElementById('movieReviewAll').style.display = 'none';
   } else if (m === 2) {
@@ -17,7 +18,7 @@ $('.movieviewingexperiences-toggle-button').each((i, e) => {
     const userId = button.data('user-id');
     const movieviewingexperience = parseInt(button.data('movieviewingexperience'));
     const nextMovieviewingexperience = (movieviewingexperience + 1) % 3;
-    
+    //ボタンを押した時に観てない、興味があるのときはネタバレ感想を表示しない。観たなら表示する。
     if(nextMovieviewingexperience === 0 || nextMovieviewingexperience === 1) {
       document.getElementById('movieReviewAll').style.display = 'none';
     } else if (nextMovieviewingexperience === 2) {

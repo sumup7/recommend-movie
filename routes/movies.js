@@ -6,13 +6,15 @@ const uuid = require('uuid');
 const Movie = require('../models/movie');
 const User = require('../models/user');
 const MovieViewingExperience = require('../models/movieviewingexperience');
-//candidate
+const csrf = require('csurf');
+const csrfProtection = csrf({ cookie: true });
 
-router.get('/new', authenticationEnsurer, (req, res, next) => {
-  res.render('new', { user: req.user });
+
+router.get('/new', authenticationEnsurer, csrfProtection, (req, res, next) => {
+  res.render('new', { user: req.user, csrfToken: req.csrfToken() });
 });
 
-router.post('/', authenticationEnsurer, (req, res, next) => {
+router.post('/', authenticationEnsurer,  csrfProtection, (req, res, next) => {
   const movieId = uuid.v4();
   const updatedAt = new Date();
   Movie.create({
@@ -21,14 +23,10 @@ router.post('/', authenticationEnsurer, (req, res, next) => {
     movieDetails: req.body.movieDetails.slice(0, 255) || '（名称未設定）',
     movieReview: req.body.movieReview.slice(0, 1000),
     movieReviewAll: req.body.movieReviewAll.slice(0, 1000),
-    // userId: req.user.id,
-    // username: req.user.username,
     createdBy: req.user.id,
     updatedAt: updatedAt
   }).then((movie) => {
-    // Movie.bulkCreate(movie).then(() => {
       res.redirect('/movies/' + movie.movieId);
-    // });
   });
 });
 
@@ -45,7 +43,6 @@ router.get('/:movieId', authenticationEnsurer, (req, res, next) => {
   order: [['updatedAt', 'DESC']]
 }).then((movie) => {
   // データベースからその映画の全ての視聴経験を取得する
-  console.log(movie);
   if(movie) {
     MovieViewingExperience.findAll({
     include: [
@@ -62,16 +59,8 @@ router.get('/:movieId', authenticationEnsurer, (req, res, next) => {
     //視聴経験MapMap(キー：ユーザーid　値：map)(キー：movieId 値：movieviewingexperience)
     const movieviewingexperienceMapMap = new Map();
     movieviewingexperiences.forEach((m) => {
-  //   // const map = movieviewingexperienceMapMap.get(m.user.userId) || new Map();
-  //   // map.set(m.movieId, m.movieviewingexperience);
-    
-  //   // map.set(m.movieId, a);
-  //   movieviewingexperienceMapMap.set(u.userId, a);
-    movieviewingexperienceMapMap.set(m.user.userId, m.movieviewingexperience);
-    
-  });
-  console.log(movieviewingexperienceMapMap);
-  
+    movieviewingexperienceMapMap.set(m.user.userId, m.movieviewingexperience);  
+  }); 
   // 閲覧データと視聴経験に紐づくユーザーからユーザー　Map　（キー:ユーザーID、値：ユーザー）を作る
   const userMap = new Map(); // key: userId, value: User
   userMap.set(parseInt(req.user.id), {
@@ -89,19 +78,14 @@ router.get('/:movieId', authenticationEnsurer, (req, res, next) => {
   //全ユーザーでループして出欠の値がない場合には、「観てない」を設定する
   const users = Array.from(userMap).map((keyValue) => keyValue[1]);
   users.forEach((u) => {
-//     movieviewingexperiences.forEach((m) => {
-//     // const map = movieviewingexperienceMapMap.get(u.userId) || new Map();
       const a = movieviewingexperienceMapMap.get(u.userId) || 0; // デフォルト値は 0 を利用
       movieviewingexperienceMapMap.set(u.userId, a);
-      //   });
 });
    res.render('movie', {
      user: req.user,
      movie: movie,
-    //  movieviewingexperiences:movieviewingexperiences,
      users: users,
      movieviewingexperienceMapMap:movieviewingexperienceMapMap
-    //  movieviewingexperience:movieviewingexperience
    });
   });
 } else {
@@ -112,23 +96,18 @@ router.get('/:movieId', authenticationEnsurer, (req, res, next) => {
 });
 }); 
 
-router.get('/:movieId/edit', authenticationEnsurer, (req, res, next) => {
+router.get('/:movieId/edit', authenticationEnsurer,  csrfProtection, (req, res, next) => {
   Movie.findOne({
     where: {
       movieId: req.params.movieId
     }
   }).then((movie) => {
     if (isMine(req, movie)) { // 作成者のみが編集フォームを開ける
-      // MovieViewingExperience.findAll({
-      //   where: { movieId: movie.movieId },
-      //   order: [['movieviewingexperience', 'ASC']]
-      // }).then((movieviewingexperiences) => {
         res.render('edit', {
           user: req.user,
           movie: movie,
-          // movieviewingexperiences: movieviewingexperiences
+          csrfToken: req.csrfToken()
         });
-      // });
     } else {
       const err = new Error('指定された予定がない、または、予定する権限がありません');
       err.status = 404;
@@ -141,7 +120,7 @@ function isMine(req, movie) {
   return movie && parseInt(movie.createdBy) === parseInt(req.user.id);
 }
 
-router.post('/:movieId', authenticationEnsurer, (req, res, next) => {
+router.post('/:movieId', authenticationEnsurer,  csrfProtection, (req, res, next) => {
   Movie.findOne({
     where: {
       movieId: req.params.movieId

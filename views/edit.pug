@@ -3,6 +3,7 @@ extends layout
 block content
   h3.my-3 感想の編集
   form(method="post", action=`/movies/${movie.movieId}?edit=1`)
+    input(type="hidden" name="_csrf" value!=csrfToken)
     div.form-group
       label(for="movieTitle") 映画のタイトル(255文字まで)
       input(type="text" name="movieTitle" value=movie.movieTitle maxlength="255")#movieTitle.form-control
@@ -18,4 +19,6 @@ block content
     div
       button(type="submit").btn.btn-info 以上の内容で感想を編集する
   h3.my-3 危険な変更
+  form(method="post", action=`/movies/${movie.movieId}?delete=1`)
+    input(type="hidden" name="_csrf" value!=csrfToken)
     button(type="submit").btn.btn-danger この感想を削除する

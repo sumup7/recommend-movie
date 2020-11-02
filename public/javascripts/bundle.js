@@ -102,7 +102,7 @@ global.jQuery = jquery__WEBPACK_IMPORTED_MODULE_0___default.a;
 
 jquery__WEBPACK_IMPORTED_MODULE_0___default()('.movieviewingexperiences-toggle-button').each(function (i, e) {
   var button = jquery__WEBPACK_IMPORTED_MODULE_0___default()(e);
-  var m = parseInt(button.data('movieviewingexperience'));
+  var m = parseInt(button.data('movieviewingexperience')); //  ブラウザを読み込んだときにに観てない、興味があるのときはネタバレ感想を表示しない。観たなら表示する。
 
   if (m === 0 || m === 1) {
     document.getElementById('movieReviewAll').style.display = 'none';
@@ -114,7 +114,7 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()('.movieviewingexperiences-toggle-b
     var movieId = button.data('movie-id');
     var userId = button.data('user-id');
     var movieviewingexperience = parseInt(button.data('movieviewingexperience'));
-    var nextMovieviewingexperience = (movieviewingexperience + 1) % 3;
+    var nextMovieviewingexperience = (movieviewingexperience + 1) % 3; //ボタンを押した時に観てない、興味があるのときはネタバレ感想を表示しない。観たなら表示する。
 
     if (nextMovieviewingexperience === 0 || nextMovieviewingexperience === 1) {
       document.getElementById('movieReviewAll').style.display = 'none';
